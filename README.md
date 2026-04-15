@@ -2,13 +2,19 @@
 
 A comprehensive, end-to-end full-stack lending decision platform designed to process Micro, Small, and Medium Enterprises (MSME) business profiles. The system features an automated proprietary credit scoring engine, robust API design, and an administrative dashboard for monitoring applications and providing manual overrides.
 
+
 ## 🏗️ Tech Stack Used
 
 - **Frontend**: React (Vite) for a fast, responsive user interface. Structured with functional components and hooks.
+
 - **Styling**: Vanilla CSS utilizing a premium dark theme design system with glassmorphism and subtle animations. No heavy component libraries were used to ensure a custom, high-end feel.
+
 - **Backend**: Node.js & Express.js, providing a lightweight, non-blocking I/O environment suitable for real-time risk decisioning.
+
 - **Database**: MongoDB paired with Mongoose ODM for flexible, schema-driven data persistence that accommodates mutating business profile requirements.
+
 - **State Management**: React's built-in Context/Hooks (`useState`, `useEffect`) avoiding over-engineering for a straightforward single-flow application.
+
 
 ## 🚀 Setup Guide
 
@@ -53,6 +59,7 @@ A comprehensive, end-to-end full-stack lending decision platform designed to pro
    The application will typically be accessible at `http://localhost:5173`.
 
 ---
+
 
 ## 📝 API Documentation
 
@@ -153,12 +160,16 @@ The core credit scoring algorithm operates synchronously upon application submis
 Our application mitigates errors and incorrect behavior using multi-layered safeguards:
 
 1. **Synchronous Async Simulation**: The exact requirement prioritized immediate feedback rather than complex background queuing (RabbitMQ, BullMQ). To fulfill real-world user expectations of "loading" states, the API simulates processing (`setTimeout(1500ms)`) explicitly keeping the UI engaged without hanging indefinitely.
+
 2. **Rate Limiting**: `express-rate-limit` is implemented on the `/submit` endpoint (10 requests/min). This prevents abusive programmatic attacks or brute force API polling aimed at gaming the credit scoring model.
+
 3. **Data Integrity & Validation**: 
    - All monetary input is constrained to prevent negative values.
    - The system utilizes strict standard Regex constraints for Indian PAN formats (`^[A-Z]{5}[0-9]{4}[A-Z]{1}$`).
    - Mongoose schemas enforce data structures natively at the model level before saving.
+   
 4. **Decoupled Engine**: The core credit analysis logic `decisionEngine.js` has zero dependencies on HTTP `req/res` contexts. This edge-case strategy guarantees that if API validations fail or formatting drops data, the engine does not inherently crash due to missing bindings but returns fallback defaults.
+
 5. **Robust RBAC Route Protection**: Actions that modify existing records, such as administrative overrides, are locked behind JSON Web Token (JWT) verification strategies targeting "Admin" roles explicitly, completely walling off public tampering.
 
 ---
@@ -166,6 +177,9 @@ Our application mitigates errors and incorrect behavior using multi-layered safe
 ## 💡 Assumptions Made
 
 1. **Interest Rates**: We assume a fixed annual interest rate of **18%** across all loans uniformly to calculate EMI for the decision ratio.
+
 2. **Revenue Stability**: We accept the input `monthlyRevenue` implicitly at face value. In standard production scopes, this sits downstream of a verifiable flow (like AWS S3 bank statement OCR extraction or GST APIs).
+
 3. **Authentication Scope**: We assume only an overarching structural "Admin" exists for verifying audit trails. Full-fledged multi-tiered organization users (Loan Officer, Underwriter, SuperAdmin) are simplified to a single protected admin tier.
+
 4. **Service Architecture**: A synchronous API methodology fits the current throughput. Real high-volume scenarios (thousands of concurrent apps) assume we would refactor this routing off of the Express thread into a Message Broker.
