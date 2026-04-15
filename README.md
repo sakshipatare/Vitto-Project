@@ -20,7 +20,7 @@ A comprehensive, end-to-end full-stack lending decision platform designed to pro
 
 ### Prerequisites
 - Node.js (v18+ recommended)
-- MongoDB (Running locally or an accessible Atlas URI)
+- MongoDB Atlas account (free tier) — [cloud.mongodb.com](https://cloud.mongodb.com)
 - Git
 
 ### Backend Setup
@@ -42,6 +42,13 @@ A comprehensive, end-to-end full-stack lending decision platform designed to pro
    ```bash
    npm run dev
    ```
+5. **Seed the admin user** (required for the Audit Trail login — run once):
+   ```bash
+   node seedAdmin.js
+   ```
+   This creates the admin account with:
+   - **Username**: `admin`
+   - **Password**: `password123`
 
 ### Frontend Setup
 1. Open a new terminal instance and navigate to the frontend directory:
@@ -58,23 +65,43 @@ A comprehensive, end-to-end full-stack lending decision platform designed to pro
    ```
    The application will typically be accessible at `http://localhost:5173`.
 
-### 🐳 Run with Docker (Easiest Method)
-If you have Docker Desktop installed, you can spin up the entire application (Frontend, Backend, and MongoDB) with a single command. 
+### ☁️ Deployed on Render
 
-1. Ensure Docker Desktop is running.
-2. Open a terminal in the root project directory (`Vitto Project/`).
-3. Run the following command to build and start the containers in detached mode:
-   ```bash
-   docker-compose up --build -d
-   ```
-4. **Access the application**:
-   - Frontend: `http://localhost:5173`
-   - Backend API: `http://localhost:5000`
-   - MongoDB: Runs internally on port `27017`.
-5. To stop the application, run:
-   ```bash
-   docker-compose down
-   ```
+This project is deployed to **Render** (frontend as a Static Site, backend as a Web Service) with **MongoDB Atlas** as the cloud database. Docker is not used.
+
+#### Deploy Your Own
+
+**1. Backend — Render Web Service**
+- Root Directory: `backend`
+- Build Command: `npm install`
+- Start Command: `npm start`
+- Environment Variables to set in Render dashboard:
+  ```
+  NODE_ENV=production
+  PORT=10000
+  MONGODB_URI=<your MongoDB Atlas connection string>
+  JWT_SECRET=<your secret key>
+  FRONTEND_URL=<your Render frontend URL>
+  ```
+- After the backend is live, open the Render **Shell** tab and run:
+  ```bash
+  node seedAdmin.js
+  ```
+  This seeds the admin account (`admin` / `password123`) needed to access the Audit Trail.
+
+**2. Frontend — Render Static Site**
+- Root Directory: `frontend`
+- Build Command: `npm install && npm run build`
+- Publish Directory: `dist`
+- Environment Variables to set in Render dashboard:
+  ```
+  VITE_API_URL=<your Render backend URL>
+  ```
+- Add a Rewrite Rule: `/* → /index.html` (keeps React Router working)
+
+**3. Test the deployment**
+- Visit `<your-backend-url>/health` — should return `{"status":"OK"}`
+- Open the frontend URL and submit a loan application
 
 ---
 
