@@ -6,7 +6,7 @@ import ApplicationList from './components/ApplicationList';
 import Login from './components/Login';
 import './index.css';
 
-const API_URL = 'http://localhost:5000/api/applications';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/applications`;
 
 function App() {
   const [loading, setLoading] = useState(false);

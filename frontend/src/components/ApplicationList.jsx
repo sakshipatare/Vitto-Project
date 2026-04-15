@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const ApplicationList = ({ token, onAuthError }) => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,8 +20,8 @@ const ApplicationList = ({ token, onAuthError }) => {
     setLoading(true);
     try {
       const url = statusFilter 
-        ? `http://localhost:5000/api/applications?status=${statusFilter}`
-        : `http://localhost:5000/api/applications`;
+        ? `${BASE_URL}/api/applications?status=${statusFilter}`
+        : `${BASE_URL}/api/applications`;
       
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` }
@@ -40,7 +42,7 @@ const ApplicationList = ({ token, onAuthError }) => {
 
   const handleOverride = async (appId, status, notes) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/applications/${appId}/override`, {
+      const response = await axios.patch(`${BASE_URL}/api/applications/${appId}/override`, {
         status,
         notes
       }, {
