@@ -58,6 +58,24 @@ A comprehensive, end-to-end full-stack lending decision platform designed to pro
    ```
    The application will typically be accessible at `http://localhost:5173`.
 
+### 🐳 Run with Docker (Easiest Method)
+If you have Docker Desktop installed, you can spin up the entire application (Frontend, Backend, and MongoDB) with a single command. 
+
+1. Ensure Docker Desktop is running.
+2. Open a terminal in the root project directory (`Vitto Project/`).
+3. Run the following command to build and start the containers in detached mode:
+   ```bash
+   docker-compose up --build -d
+   ```
+4. **Access the application**:
+   - Frontend: `http://localhost:5173`
+   - Backend API: `http://localhost:5000`
+   - MongoDB: Runs internally on port `27017`.
+5. To stop the application, run:
+   ```bash
+   docker-compose down
+   ```
+
 ---
 
 
